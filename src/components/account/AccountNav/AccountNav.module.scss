@@ -1,0 +1,51 @@
+@use "../../../styles/tokens" as *;
+.accountNav {
+  h2 {
+    font-size: 18px;
+    margin: 16px 0 5px;
+  }
+  > p {
+    margin-bottom: 32px;
+  }
+  > a {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid $line;
+    padding: 16px 0;
+    font-size: 13px;
+    color: $muted;
+    &.navActive {
+      color: $ink;
+      font-weight: 600;
+    }
+  }
+}
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #ebe9e2;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+}
+@media (max-width: 700px) {
+  .accountNav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 20px;
+    border-bottom: 1px solid $line;
+    padding-bottom: 12px;
+    .avatar,
+    h2,
+    > p {
+      display: none;
+    }
+    > a {
+      padding: 10px 0;
+      border: 0;
+      font-size: 12px;
+      gap: 8px;
+    }
+  }
+}

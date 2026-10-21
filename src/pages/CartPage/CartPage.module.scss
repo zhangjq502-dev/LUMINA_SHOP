@@ -1,0 +1,38 @@
+@use "../../styles/tokens" as *;
+.listHeader {
+  border-bottom: 1px solid $line;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  font-size: 14px;
+  span {
+    color: $muted;
+    font-size: 12px;
+  }
+}
+.itemName {
+  font-size: 15px;
+}
+.itemEnd {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: end;
+  font-size: 13px;
+  font-weight: 400;
+}
+.emptyIcon {
+  font-size: 50px;
+  font-weight: 300;
+  color: #898a7e;
+}
+@media (max-width: 700px) {
+  .itemName {
+    font-size: 13px;
+  }
+}
+@media (max-width: 700px) {
+  .itemEnd {
+    font-size: 11px;
+  }
+}

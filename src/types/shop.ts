@@ -20,6 +20,11 @@ export type Order = {
   status: string;
   totalCents: number;
   shippingCents: number;
+  expiresAt: string;
+  paidAt: string | null;
+  paymentSessionId: string | null;
+  carrier: string | null;
+  trackingNumber: string | null;
   recipient: string;
   phone: string;
   email: string;
@@ -45,4 +50,5 @@ export const orderLabels: Record<string, string> = {
   SHIPPED: "运输中",
   COMPLETED: "已完成",
   CANCELLED: "已取消",
+  EXPIRED: "已过期",
 };

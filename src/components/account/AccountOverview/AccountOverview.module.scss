@@ -1,0 +1,36 @@
+@use "../../../styles/tokens" as *;
+.welcome {
+  padding: 36px;
+  background: $paper;
+  h2 {
+    font-size: 32px;
+  }
+  p {
+    font-size: 13px;
+    color: $muted;
+  }
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid $line;
+  margin: 26px 0;
+  a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 10px;
+    gap: 10px;
+    &:not(:last-child) {
+      border-right: 1px solid $line;
+    }
+  }
+  strong {
+    font-weight: 400;
+    font-size: 30px;
+  }
+  span {
+    font-size: 11px;
+    color: $muted;
+  }
+}

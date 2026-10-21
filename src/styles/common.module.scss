@@ -1,0 +1,372 @@
+@use "./tokens" as *;
+.muted {
+  font-size: 12px;
+  color: $muted;
+  line-height: 1.8;
+}
+
+.kicker {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: $muted;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 13px;
+  margin: 16px 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 26px;
+  flex-wrap: wrap;
+  button {
+    background: none;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    padding: 10px 0;
+    font-size: 13px;
+    color: $muted;
+    &.active {
+      color: $ink;
+      border-color: $ink;
+    }
+  }
+}
+
+.button,
+.outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  text-align: center;
+  padding: 15px 22px;
+  font-size: 12px;
+  border: 1px solid $ink;
+  border-radius: 0;
+  line-height: 1.6;
+  cursor: pointer;
+}
+
+.button {
+  background: $ink;
+  color: #fff;
+  &:hover {
+    background: #3d3d3d;
+  }
+}
+
+.outline {
+  background: transparent;
+  color: $ink;
+  &:hover {
+    background: $paper;
+  }
+}
+
+.inlineLink {
+  display: inline-block;
+  font-size: 12px;
+  margin: 20px 0;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+.textButton {
+  border: 0;
+  background: none;
+  color: $muted;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-size: 11px;
+  padding: 4px 0;
+}
+
+.notice {
+  padding: 16px 20px;
+  background: $paper;
+  font-size: 12px;
+  color: #68675f;
+  line-height: 1.9;
+  margin: 20px 0;
+  a {
+    display: inline-block;
+    margin-left: 8px;
+    text-decoration: underline;
+  }
+}
+
+.description {
+  font-size: 13px;
+  line-height: 2;
+  color: $muted;
+  border-top: 1px solid $line;
+  padding-top: 22px;
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid $line;
+  height: 36px;
+  button {
+    border: 0;
+    background: white;
+    width: 32px;
+    height: 100%;
+    font-size: 17px;
+  }
+  span {
+    min-width: 30px;
+    text-align: center;
+    font-size: 12px;
+  }
+}
+
+.disclosure {
+  border-bottom: 1px solid $line;
+  padding: 18px 0;
+  font-size: 12px;
+  summary {
+    cursor: pointer;
+  }
+  p {
+    color: $muted;
+    line-height: 1.9;
+  }
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 60px;
+  margin: 36px 0 60px;
+}
+
+.summary {
+  background: $paper;
+  padding: 30px;
+  align-self: start;
+  h2 {
+    margin-top: 0;
+  }
+  .button {
+    width: 100%;
+    margin: 10px 0;
+  }
+  .outline {
+    width: 100%;
+  }
+}
+
+.total {
+  border-top: 1px solid #dad9d4;
+  margin-top: 24px;
+  padding: 24px 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  strong {
+    font-size: 22px;
+    font-weight: 500;
+  }
+}
+
+.cartItem {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 22px;
+  padding: 26px 0;
+  border-bottom: 1px solid $line;
+  h3 {
+    margin-top: 4px;
+  }
+  .kicker {
+    margin: 2px 0 7px;
+  }
+}
+
+.thumb {
+  display: block;
+  width: 100px;
+  min-height: 124px;
+  position: relative;
+  background: $paper;
+  img {
+    object-fit: cover;
+  }
+}
+
+.empty {
+  padding: 70px 20px;
+  text-align: center;
+  background: $paper;
+  h2 {
+    font-size: 28px;
+  }
+  p {
+    color: $muted;
+    font-size: 13px;
+  }
+  .button,
+  .outline,
+  .inlineLink {
+    display: table;
+    margin: 24px auto 0;
+  }
+}
+
+.form {
+  h2 {
+    margin: 0 0 26px;
+    font-size: 20px;
+    span {
+      font-size: 11px;
+      color: $muted;
+      margin-right: 16px;
+    }
+  }
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+  .button {
+    width: 100%;
+    margin-top: 24px;
+  }
+  .textButton {
+    margin-top: 16px;
+  }
+}
+
+.accountLayout {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 64px;
+  margin: 40px 0 70px;
+}
+
+.status {
+  display: inline-block;
+  padding: 5px 10px;
+  background: #eeefe8;
+  color: #5e6650;
+  font-size: 11px;
+}
+
+.timeline {
+  display: flex;
+  margin-top: 36px;
+  > div {
+    flex: 1;
+    position: relative;
+    color: #999;
+    font-size: 11px;
+    span {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      border: 1px solid #ddd;
+      background: $paper;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+    }
+    &:not(:last-child):before {
+      content: "";
+      position: absolute;
+      height: 1px;
+      background: #ddd;
+      left: 26px;
+      right: 0;
+      top: 13px;
+    }
+    &.completed {
+      color: $ink;
+      span {
+        background: $ink;
+        color: white;
+        border-color: $ink;
+      }
+      &:before {
+        background: $ink;
+      }
+    }
+  }
+}
+
+.panel {
+  border: 1px solid $line;
+  padding: 28px;
+  h2 {
+    font-size: 19px;
+    margin: 0 0 22px;
+  }
+  .cartItem {
+    margin-bottom: 26px;
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 950px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 25px;
+  }
+
+  .accountLayout {
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 30px;
+  }
+}
+
+@media (max-width: 700px) {
+  .columns,
+  .accountLayout {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .summary {
+    padding: 24px;
+  }
+
+  .cartItem {
+    grid-template-columns: 76px 1fr auto;
+    gap: 14px;
+  }
+
+  .thumb {
+    width: 76px;
+    min-height: 100px;
+  }
+
+  .timeline p {
+    font-size: 9px;
+  }
+
+  .panel {
+    padding: 22px;
+  }
+
+  .empty {
+    padding: 45px 20px;
+  }
+
+  .empty h2 {
+    font-size: 23px;
+  }
+
+  .tabs {
+    gap: 24px;
+  }
+}

@@ -1,6 +1,6 @@
-import UserLink from "@/components/auth/UserLink";
-import CartLink from "@/components/shop/CartLink";
-import Link from "next/link";
+import UserLink from "@/components/auth/UserLink/UserLink";
+import CartLink from "@/components/shop/CartLink/CartLink";
+import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
 
 export default function Header() {
@@ -11,17 +11,17 @@ export default function Header() {
       </div>
       <header className={styles.header}>
         <div className={styles.container}>
-          <Link href="/" className={styles.logo} aria-label="LUMINA 首页">
+          <Link to="/" className={styles.logo} aria-label="LUMINA 首页">
             <span aria-hidden="true">✳</span> LUMINA
           </Link>
           <nav className={styles.nav} aria-label="主导航">
-            <Link href="/">HOME</Link>
-            <Link href="/shop">SHOP</Link>
-            <Link href="/#about">ABOUT</Link>
-            <Link href="/#contact">CONTACT</Link>
+            <Link to="/">HOME</Link>
+            <Link to="/shop">SHOP</Link>
+            <Link to="/#about">ABOUT</Link>
+            <Link to="/#contact">CONTACT</Link>
           </nav>
           <div className={styles.actions}>
-            <Link href="/shop" aria-label="浏览商品" className={styles.icon}>
+            <Link to="/shop" aria-label="浏览商品" className={styles.icon}>
               <svg
                 viewBox="0 0 24 24"
                 fill="none"

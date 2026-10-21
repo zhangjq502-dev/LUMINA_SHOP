@@ -43,3 +43,14 @@ next-env.d.ts
 # Generated Prisma client (run npm run db:generate)
 /src/generated/prisma/
 !.env.example
+
+/backend/dist/
+/backend/src/generated/
+/.test-artifacts/
+
+/backend/.mail-outbox/
+
+/dist/
+
+/playwright-report/
+/test-results/

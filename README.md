@@ -1,80 +1,127 @@
-# LUMINA
+# LUMINA SHOP
 
-Next.js App Router + React + TypeScript + SCSS Modules 的商城学习项目。商品与订单已接入本地 PostgreSQL 和 Prisma 7。
+极简服饰商城。前端已整体迁移为 **React + Vite + TypeScript + React Router**，后端为独立 **NestJS + Prisma + PostgreSQL** 服务。
 
-## 当前能力
+## 启动
 
-- 18 件数据库商品，按规格保存价格和库存；首页、商品列表、详情及购物车读取数据库商品。
-- 服务端校验商品、规格、数量和地址，以数据库价格计算订单金额；金额以整数分保存。
-- 事务内扣减库存、创建订单和商品快照；库存不足整单回滚。
-- 以访客会话和提交编号实现幂等下单；相同编号但不同内容拒绝提交。
-- HttpOnly Cookie 识别访客，数据库只保存 token 的 SHA-256 摘要。列表、详情和取消订单均验证归属。
-- 取消待付款订单会在事务内归还库存，重复取消不会重复归还。
-- 真实邮箱密码注册、登录、退出；scrypt 加盐哈希密码。登录后迁移当前访客未归属订单，订单按用户身份校验。
-- 收货地址管理仍为界面演示；尚未接支付、发货、后台管理或订单过期任务。
+建议 Node.js 22.12+。在项目根目录：
 
-## 本地启动
+```sh
+npm install
+cp .env.example .env
+# 在本地 .env 填写 DATABASE_URL
+npm run db:generate
+npm run db:deploy
+npm run db:seed
+```
 
-需要 Node.js 22.12+ 和 PostgreSQL。先创建一个独立的数据库，例如 `createdb lumina_shop`。
+已配置数据库的项目不需要重复复制 .env 或导入种子。分别打开两个终端：
 
-1. 复制 `.env.example` 为 `.env`，填写自己的 `DATABASE_URL`，不要提交 `.env`。
-2. `npm install`（安装后自动生成 Prisma Client）。
-3. `npm run db:deploy` 应用已提交的数据库迁移。
-4. `npm run db:seed` 导入 18 件商品及初始 SKU 库存。
-5. `npm run dev`，打开终端显示的本地地址。
+```sh
+npm run dev:api
+```
 
-种子数据位于 `src/data/products.ts`，只在导入脚本中使用。页面运行时的数据源是 PostgreSQL。重复导入更新商品资料及价格，不重置已有库存，也不删除订单。
+```sh
+npm run dev
+```
 
-修改模型后运行 `npm run db:migrate -- --name your_change`，然后 `npm run db:generate`。生成目录不进入 Git。
+前端：http://localhost:5173；API：http://localhost:4000/api。旧 Next.js 的 3000 端口不再用于本项目。请通过 localhost 访问，使浏览器来源与 FRONTEND_ORIGIN 一致。
 
-## 体验下单
+## 看代码的顺序
 
-打开 `/shop` → 商品详情选择规格并加入购物袋 → `/cart` → `/checkout`，填写虚构收货资料并提交。订单将真实保存在本地数据库，状态为「待付款」，不会扣款。
+1. `src/main.tsx`：React 挂载入口和全局错误处理。
+2. `src/router/routes.tsx`：页面路由表和懒加载；`src/App.tsx`：整体布局与路由渲染。
+3. `src/pages`：页面获取数据，处理加载、失败、重试。
+4. `src/components`：展示和表单组件，SCSS Modules 样式。
+5. `src/services/http.ts`：统一 fetch 请求、携带 Cookie、处理错误；其他 services 文件按业务调用接口。
+6. `src/providers/AuthProvider.tsx`：当前用户；`CartProductsProvider.tsx`：购物车商品按需查询；`src/stores/cart.ts`：Zustand 购物车持久化。
+7. `backend/src`：Controller 接收请求，Service 实现业务，通过 Prisma 访问数据库。
 
-`/orders` 可以在刷新或重启应用后查看该浏览器 Cookie 对应的订单；详情页支持取消待付款订单。下单扣减 SKU 库存，取消后归还。尚无自动过期任务，请及时取消不需要的测试订单。
+数据流：浏览器 React → HTTP API → NestJS → Prisma → PostgreSQL → JSON → React 渲染。前端没有数据库连接，也没有 Next.js 服务端组件。
 
-访客 Cookie 保存 30 天；注册或登录时会将当前访客尚未归属的订单关联到用户，并更换访客标识。退出后不能继续用访客标识查看该用户订单。购物车目前保存在页面内存，刷新会清空。
+## 已实现功能
 
-## 数据接口
+- 首页、商品列表、分类搜索与排序、商品详情与 SKU 库存选择；商品图片使用浏览器原生懒加载，首屏主图优先加载。
+- 购物车数量、金额、持久化与登录后合并访客购物车。
+- 注册、登录、退出、账户资料、修改密码、找回密码、邮箱验证。
+- 地址增删改查和默认地址。
+- 访客/用户结算、订单列表与详情、取消、确认收货。
+- 服务端校验价格和库存，事务预留库存、超时释放、请求幂等。
+- 本地模拟付款；Stripe 测试支付接口和签名回调代码已保留，需配置服务后再联调。
+- 管理员商品、库存维护及发货。
+- 页面加载状态、失败重试、路由权限、404、移动端样式。
 
-| 接口                    | 说明                                    |
-| ----------------------- | --------------------------------------- |
-| `GET /api/products`     | 数据库商品列表，包含 SKU 价格和可用库存 |
-| `GET /api/products/:id` | 商品详情                                |
-| `POST /api/session`     | 建立访客 HttpOnly Cookie                |
-| `GET /api/orders`       | 当前用户或访客的订单                    |
-| `POST /api/orders`      | 校验、扣库存并创建待付款订单            |
-| `GET /api/orders/:id`   | 当前用户或访客订单详情                  |
-| `PATCH /api/orders/:id` | `{ "action": "cancel" }` 取消待付款订单 |
+登录使用 HttpOnly Cookie `lumina_session`；数据库保存会话摘要。浏览器自动携带凭据，JavaScript 不读取登录 token，也不把它放进 localStorage。购物车保存于 localStorage。
 
-下单请求只接受 `idempotencyKey`（UUID）、`items`（商品 id、size、quantity）和 `shipping`（recipient、phone、email、province、district、address）。不接受客户端价格或状态。
+## 环境变量
 
-## 检查
+以 `.env.example` 为准。`VITE_API_URL` 是公开的浏览器 API 地址；`FRONTEND_ORIGIN` 是后端允许的前端来源。数据库、邮件和支付密钥只供后端使用，不能加 `VITE_` 前缀。修改 .env 后重启服务。
 
-- `npm run lint`
-- `npx tsc --noEmit`
-- `npx next build --webpack`（当前受限环境下默认 Turbopack 的子进程端口绑定可能受限）
-- 启动本地服务后运行 `npm run test:orders`。可通过 `TEST_BASE_URL` 指定地址。测试使用独立临时商品和虚构资料，覆盖价格校验、幂等、并发库存、权限隔离和取消归还库存，并自动清理自己的测试数据。
+本地 `PAYMENT_MODE=demo` 模拟支付不会扣款；生产环境禁止 demo。未配置 SMTP 时，开发邮件写入 `backend/.mail-outbox/`，打开其中邮件查看验证/重置链接。不要提交或分享这些文件。真实 SMTP、Stripe 沙箱和正式部署尚需服务配置与联调。
 
-这是一套本地开发用后端。正式上线前还需接入邮箱验证、密码找回、支付回调、订单过期释放、全局限流及生产数据库配置。
+授予已有账户管理员角色：
 
-## 登录身份验证
+```sh
+npm run admin:grant -- your-email@example.com
+```
 
-- 浏览器通过 `lumina_session` Cookie 保存随机生成的 32 字节会话 token。Cookie 为 HttpOnly、SameSite=Lax，生产环境额外使用 Secure；有效期 7 天。
-- PostgreSQL `Session` 表只保存 token 的 SHA-256 哈希、用户 id、创建时间和过期时间，不保存原始 token。
-- 服务端读取 Cookie，对 token 做哈希，再查会话是否存在、是否过期，最后获取用户。token 不返回给前端 JavaScript，也不放入页面数据。
-- 密码以随机盐加 scrypt（N=32768、r=8、p=3）派生哈希存放在 `User.passwordHash`，校验时使用恒定时间比较。
-- 每个邮箱注册/登录合计最多 20 次尝试 / 15 分钟，计数存数据库；写操作检查 Origin。
-- 登录会换发 token 并撤销当前旧会话；退出删除服务端会话、清除 Cookie。其他设备的登录不受影响。
-- `/account` 和 `/account/addresses` 要求登录。订单接口支持登录用户和未登录访客，所有查询与取消操作均校验归属。
+## 检查与数据库
 
-| 接口                      | 说明                                    |
-| ------------------------- | --------------------------------------- |
-| `POST /api/auth/register` | `{ name, email, password }`，注册并登录 |
-| `POST /api/auth/login`    | `{ email, password }`，登录             |
-| `POST /api/auth/logout`   | 注销当前会话                            |
-| `GET /api/auth/me`        | 返回安全的用户资料或 `user: null`       |
+```sh
+npm run lint
+npm run build
+npm run build:api
+npm test
+npm run db:studio
+```
 
-Navicat 可以查看 `User`、`Session`、`AuthThrottle` 表。`Order.userId` 表示订单关联用户。不要直接修改密码哈希、token 哈希或订单归属字段。
+测试创建独立 `lumina_shop_test` 数据库，需要本地数据库用户有建库权限；可设置独立 `TEST_DATABASE_URL`。不会对业务库运行测试清理。集成测试覆盖认证、地址、订单、库存与模拟支付。
 
-运行 `npm run test:auth` 验证注册、密码哈希、Cookie 属性、会话轮换与过期、退出、订单迁移及用户隔离。测试创建独立用户和商品，结束后清理数据。
+## 部署
+
+`npm run build` 输出前端 `dist/` 静态资源；NestJS 单独构建、部署。静态服务器必须把页面路由回退到 index.html，参考根目录 `nginx.conf`，否则刷新 `/orders` 会返回服务器 404。生产环境配置 HTTPS、API 地址、Cookie 和精确 CORS 来源。
+
+React SPA 在浏览器获取数据，当前保留基础页面标题和描述；没有 Next.js SSR。若未来需要商品搜索引擎收录优化，可单独评估预渲染。`npm run preview` 用于本地预览构建结果。
+
+## 路由懒加载与商品分页
+
+页面使用 React.lazy 和 Suspense，访问时再下载对应页面代码。商品列表通过 `/api/products/paginated?page=1&pageSize=6&q=&category=&sort=default` 获取数据，每页默认 6 件、最多 24 件。后端在查询数据库时完成筛选、排序、计数和分页；相同价格使用 id 保证顺序稳定，越界页自动返回最后一页。
+
+页码、分类和排序保存在 URL，搜索输入防抖 350ms，切换筛选会清除旧页码。购物车已改为按商品 ID 批量查询，首页、列表、详情和购物车分别获取所需数据。
+
+## 前端组件目录约定
+
+- 每个页面放在 `src/pages/页面名/页面名.tsx`，完整商品列表和购物车分别为 ShopPage、CartPage。
+- 每个功能组件放在 `src/components/业务域/组件名/组件名.tsx`。
+- 有专属样式时，旁边放置同名 `.module.scss`；只使用公共样式、仅控制逻辑的组件不创建空样式文件。
+- `src/styles/common.module.scss` 只保留跨组件复用的按钮、表单、排版和布局；`_tokens.scss` 保存颜色变量。
+- `mergeStyles` 将公共类名与本地类名组合，确保嵌套规则和响应式样式都能匹配；组件模块在导入时组合一次。
+- 新增或移动页面后更新 `src/router/routes.tsx`。不再使用旧的 `commerce.module.scss`。
+
+## 身份、页面请求与购物车按需查询
+
+`AuthProvider` 只管理当前用户和身份刷新。页面使用 `useResourceRefresh` 分别订阅 products、orders、addresses、admin，订单刷新不会重新加载身份或商品目录。
+
+首页请求 6 件精选商品；商品详情按主键查询；购物车和结算由 `CartProductsProvider` 根据当前条目的去重 ID 调用 `/api/products/batch?ids=[...]`，空购物车不发商品请求。批量查询最多接受 100 个 ID，排除下架商品；查询失败展示重试，不删除本地条目。`GET /api/products` 也改为有界分页，防止误调用导致全量返回。
+
+## 浏览器端到端测试
+
+```sh
+npx playwright install chromium
+npm run test:e2e
+npm run test:e2e:report
+```
+
+本地默认使用已安装的 Google Chrome；CI 使用安装的 Chromium。测试自动启动独立 API 和 5188 端口前端，连接独立 *_test 数据库；创建临时商品与管理员，执行注册、加购、刷新恢复、按 ID 查询、下单、模拟付款、后台发货和确认收货，并在结束后清理自己的数据。不会更改业务数据库或向 Stripe 发起支付。运行前不要占用 5188 端口。失败报告保存在 playwright-report 和 test-results，不提交到仓库。
+
+## 配置 Stripe 沙箱（可稍后完成）
+
+目前本地使用 demo 模拟支付。Stripe 适配器、Checkout 会话复用/幂等、服务端价格和运费、支付回跳同步、签名回调及重复事件处理已有实现；自动化使用替身验证 Stripe SDK 请求与签名，不能代替真实 Stripe 沙箱联调。
+
+1. 在 Stripe 控制台选择测试模式或 Sandbox，进入 API keys，取得 Secret key（sk_test_ 开头）。仅填写本地 `.env` 的 STRIPE_SECRET_KEY，不使用 live key。
+2. 安装官方 Stripe CLI 并执行 `stripe login`。
+3. 保持 `stripe listen --forward-to localhost:4000/api/payments/webhook` 运行，将它显示的 whsec_ 密钥填到本地 `.env` 的 STRIPE_WEBHOOK_SECRET。CLI 密钥与控制台配置端点的密钥不能混用。
+4. 重启后端，打开待付款订单，点击 Stripe 测试支付。支付状态以后端验签回调或主动查询结果为准，不能靠回跳地址判断。
+5. 验证成功支付、取消返回、重复回调与刷新后的状态；没有外部密钥时继续使用 PAYMENT_MODE=demo。只有 sk_test_ 和回调密钥都已填写才启用 Stripe，否则开发模式回退 demo，生产模式禁用付款。
+
+官方说明：https://docs.stripe.com/keys 、https://docs.stripe.com/stripe-cli 、https://docs.stripe.com/checkout/fulfillment

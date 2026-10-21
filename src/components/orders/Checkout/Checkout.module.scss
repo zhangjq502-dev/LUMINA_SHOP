@@ -1,0 +1,24 @@
+@use "../../../styles/tokens" as *;
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 20px;
+  margin-bottom: 28px;
+}
+.full {
+  grid-column: 1/-1;
+}
+.option {
+  padding: 20px;
+  border: 1px solid $line;
+  margin-bottom: 32px;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+@media (max-width: 700px) {
+  .fields {
+    gap: 0 14px;
+  }
+}

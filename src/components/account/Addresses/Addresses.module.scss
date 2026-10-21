@@ -1,0 +1,12 @@
+@use "../../../styles/tokens" as *;
+.address {
+  border: 1px solid $line;
+  padding: 28px;
+  margin-bottom: 24px;
+  h2 {
+    font-size: 19px;
+  }
+  p {
+    font-size: 13px;
+  }
+}

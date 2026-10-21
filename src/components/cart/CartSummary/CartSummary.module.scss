@@ -1,0 +1,9 @@
+@use "../../../styles/tokens" as *;
+.summaryNote {
+  margin-top: 30px;
+  border-top: 1px solid #dad9d4;
+  padding-top: 24px;
+  font-size: 11px;
+  color: $muted;
+  line-height: 1.9;
+}

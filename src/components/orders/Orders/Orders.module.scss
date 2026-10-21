@@ -1,0 +1,54 @@
+@use "../../../styles/tokens" as *;
+.order {
+  border: 1px solid $line;
+  margin-top: 24px;
+  padding: 0 24px;
+}
+.orderTop {
+  border-bottom: 1px solid $line;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 0;
+  font-size: 11px;
+  color: $muted;
+}
+.orderId {
+  margin-left: 12px;
+}
+.orderBottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  padding: 18px 0;
+  font-size: 11px;
+  .outline {
+    font-size: 11px;
+    padding: 9px 16px;
+  }
+}
+@media (max-width: 700px) {
+  .order {
+    padding: 0 16px;
+  }
+}
+@media (max-width: 700px) {
+  .orderTop {
+    align-items: start;
+  }
+}
+@media (max-width: 700px) {
+  .orderId {
+    display: block;
+    margin: 5px 0 0;
+  }
+}
+@media (max-width: 700px) {
+  .orderBottom {
+    align-items: end;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+}

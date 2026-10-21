@@ -1,0 +1,74 @@
+@use "../../../styles/tokens" as *;
+.auth {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 960px;
+  margin: 40px auto 70px;
+  border: 1px solid $line;
+}
+.authArt {
+  background: #ebeae4;
+  padding: 64px 44px;
+  > span {
+    font-size: 50px;
+  }
+  h2 {
+    font-size: 60px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    margin-top: 80px;
+  }
+  p {
+    color: $muted;
+    font-size: 13px;
+  }
+}
+.authForm {
+  padding: 44px;
+  .tabs {
+    margin-bottom: 26px;
+  }
+  .form {
+    margin-top: 24px;
+  }
+}
+@media (max-width: 950px) {
+  .authForm {
+    padding: 28px;
+  }
+}
+@media (max-width: 950px) {
+  .authArt {
+    padding: 40px 28px;
+  }
+}
+@media (max-width: 700px) {
+  .auth {
+    margin-top: 24px;
+  }
+}
+@media (max-width: 700px) {
+  .authArt {
+    padding: 30px;
+    h2 {
+      font-size: 42px;
+      margin: 24px 0;
+    }
+    > span {
+      font-size: 30px;
+    }
+  }
+}
+@media (max-width: 700px) {
+  .authForm {
+    padding: 28px 24px;
+  }
+}
+
+@media (max-width: 700px) {
+  .auth {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}

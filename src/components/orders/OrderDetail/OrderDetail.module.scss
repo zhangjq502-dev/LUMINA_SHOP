@@ -1,0 +1,17 @@
+@use "../../../styles/tokens" as *;
+.orderHero {
+  padding: 32px;
+  background: $paper;
+  margin-bottom: 36px;
+  h2 {
+    font-size: 28px;
+  }
+}
+@media (max-width: 700px) {
+  .orderHero {
+    padding: 24px 18px;
+    h2 {
+      font-size: 24px;
+    }
+  }
+}

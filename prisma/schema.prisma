@@ -1,6 +1,7 @@
 generator client {
   provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  moduleFormat = "cjs"
+  output   = "../backend/src/generated/prisma"
 }
 
 datasource db {
@@ -13,6 +14,7 @@ enum OrderStatus {
   SHIPPED
   COMPLETED
   CANCELLED
+  EXPIRED
 }
 
 model Product {
@@ -52,6 +54,11 @@ model Order {
   idempotencyKey String
   requestHash    String
   status         OrderStatus @default(PENDING_PAYMENT)
+  expiresAt      DateTime @default(dbgenerated("(now() + interval '30 minutes')"))
+  paidAt         DateTime?
+  paymentSessionId String? @unique
+  carrier        String?
+  trackingNumber String?
   totalCents     Int
   shippingCents  Int @default(0)
   recipient      String
@@ -66,6 +73,7 @@ model Order {
   @@unique([guestHash, idempotencyKey])
   @@index([guestHash, createdAt])
   @@index([userId, createdAt])
+  @@index([status, expiresAt])
 }
 
 model OrderItem {
@@ -87,6 +95,10 @@ model User {
   id           String @id @default(cuid())
   email        String @unique
   name         String
+  role         String @default("USER")
+  emailVerifiedAt DateTime?
+  addresses    Address[]
+  emailTokens  EmailToken[]
   passwordHash String
   createdAt    DateTime @default(now())
   sessions     Session[]
@@ -107,4 +119,31 @@ model AuthThrottle {
   key       String @id
   attempts  Int
   resetAt   DateTime
+}
+
+model Address {
+ id String @id @default(cuid())
+ userId String
+ user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+ recipient String
+ phone String
+ province String
+ district String
+ address String
+ isDefault Boolean @default(false)
+ createdAt DateTime @default(now())
+ @@index([userId])
+}
+model EmailToken {
+ tokenHash String @id
+ userId String
+ user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+ purpose String
+ expiresAt DateTime
+ createdAt DateTime @default(now())
+ @@index([userId,purpose])
+}
+model PaymentEvent {
+ id String @id
+ createdAt DateTime @default(now())
 }

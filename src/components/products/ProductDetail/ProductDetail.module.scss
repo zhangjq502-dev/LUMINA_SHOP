@@ -1,0 +1,90 @@
+@use "../../../styles/tokens" as *;
+.detail {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 70px;
+}
+.detailPhoto {
+  position: relative;
+  min-height: 660px;
+  background: $paper;
+  img {
+    object-fit: cover;
+  }
+}
+.productInfo {
+  padding: 20px 0;
+  h2 {
+    font-size: 34px;
+    line-height: 1.2;
+    margin: 18px 0;
+  }
+  .button {
+    width: 100%;
+    margin-top: 24px;
+  }
+}
+.price {
+  font-size: 22px;
+  margin: 25px 0;
+}
+.label {
+  font-size: 12px;
+  margin: 24px 0 12px;
+}
+.color {
+  display: block;
+  border-radius: 50%;
+  height: 22px;
+  width: 22px;
+  outline: 1px solid #bbb;
+  outline-offset: 3px;
+}
+.sizes {
+  display: flex;
+  gap: 10px;
+  button {
+    border: 1px solid $line;
+    background: white;
+    min-width: 48px;
+    padding: 12px;
+    &.selected {
+      border-color: $ink;
+      background: $ink;
+      color: white;
+    }
+  }
+}
+@media (max-width: 950px) {
+  .detail {
+    gap: 30px;
+  }
+}
+@media (max-width: 950px) {
+  .detailPhoto {
+    min-height: 520px;
+  }
+}
+@media (max-width: 700px) {
+  .detailPhoto {
+    min-height: 0;
+    aspect-ratio: 4/5;
+  }
+}
+@media (max-width: 700px) {
+  .productInfo {
+    padding: 0;
+  }
+}
+@media (max-width: 700px) {
+  .productInfo h2 {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 700px) {
+  .detail {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
