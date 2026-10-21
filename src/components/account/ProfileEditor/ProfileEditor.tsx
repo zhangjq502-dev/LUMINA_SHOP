@@ -1,7 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/providers/AuthProvider";
-import { useCart } from "@/components/shop/ShopProvider/ShopProvider";
 import {
   updateProfile,
   changePassword,
@@ -9,7 +8,7 @@ import {
 } from "@/services/account";
 import s from "@/styles/common.module.scss";
 export default function ProfileEditor() {
-  const { user } = useCart();
+  const { user } = useAuth();
   const [message, setMessage] = useState("");
   const [pending, setPending] = useState(false);
   const navigate = useNavigate();

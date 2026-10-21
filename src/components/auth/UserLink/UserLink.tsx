@@ -1,7 +1,7 @@
+import { useAuth } from "@/providers/AuthProvider";
 import { Link } from "react-router-dom";
-import { useCart } from "@/components/shop/ShopProvider/ShopProvider";
 export default function UserLink() {
-  const { user } = useCart();
+  const { user } = useAuth();
   return (
     <Link
       to={user ? "/account" : "/login"}

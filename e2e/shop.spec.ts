@@ -50,9 +50,9 @@ test("注册、加购持久化、按需商品查询、下单、付款、管理�
   await expect(page).toHaveURL(/\/orders\/[^/]+$/);
   const orderUrl = page.url();
   await page.getByRole("button", { name: "模拟付款", exact: true }).click();
-  await expect(page.getByText("待发货", { exact: true })).toBeVisible();
+  await expect(page.getByText("待发货", { exact: true }).first()).toBeVisible();
   await page.reload();
-  await expect(page.getByText("待发货", { exact: true })).toBeVisible();
+  await expect(page.getByText("待发货", { exact: true }).first()).toBeVisible();
   const admin = await browser.newContext({ baseURL: "http://localhost:5188" });
   try {
     const adminPage = await admin.newPage();

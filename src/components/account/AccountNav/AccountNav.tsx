@@ -1,12 +1,12 @@
+import { useAuth } from "@/providers/AuthProvider";
 import { Link } from "react-router-dom";
-import { useCart } from "@/components/shop/ShopProvider/ShopProvider";
 import localStyles from "./AccountNav.module.scss";
 import sharedStyles from "@/styles/common.module.scss";
 import { mergeStyles } from "@/lib/mergeStyles";
 const s = mergeStyles(sharedStyles, localStyles);
 
 export function AccountNav({ active }: { active: string }) {
-  const { user } = useCart();
+  const { user } = useAuth();
   return (
     <aside className={s.accountNav}>
       <div className={s.avatar}>L</div>

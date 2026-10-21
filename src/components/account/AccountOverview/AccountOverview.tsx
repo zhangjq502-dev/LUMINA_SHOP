@@ -1,6 +1,6 @@
+import { useAuth } from "@/providers/AuthProvider";
 import ProfileEditor from "../ProfileEditor/ProfileEditor";
 import { Link } from "react-router-dom";
-import { useCart } from "@/components/shop/ShopProvider/ShopProvider";
 import { PageShell } from "@/components/ui/PageShell/PageShell";
 import { AccountNav } from "../AccountNav/AccountNav";
 import LogoutButton from "@/components/auth/LogoutButton/LogoutButton";
@@ -10,7 +10,7 @@ import { mergeStyles } from "@/lib/mergeStyles";
 const s = mergeStyles(sharedStyles, localStyles);
 
 export function AccountOverview({ counts }: { counts: number[] }) {
-  const { user } = useCart();
+  const { user } = useAuth();
   return (
     <PageShell title="我的账户" eyebrow="A SPACE THAT’S YOURS">
       <div className={s.accountLayout}>

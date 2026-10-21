@@ -1,3 +1,4 @@
+import { useAuth } from "@/providers/AuthProvider";
 import type { Address } from "@/services/account";
 import { ensureGuestSession } from "@/services/auth";
 import { createOrder, type CheckoutInput } from "@/services/orders";
@@ -22,7 +23,8 @@ export default function Checkout({
     addresses.find((a) => a.isDefault)?.id ?? "",
   );
   const savedAddress = addresses.find((a) => a.id === addressId);
-  const { items, products, setItems, user } = useCartProducts();
+  const { items, products, setItems } = useCartProducts();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { refresh } = useResourceRefresh("orders");
   const [pending, setPending] = useState(false);

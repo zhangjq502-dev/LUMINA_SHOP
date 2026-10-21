@@ -19,7 +19,6 @@ export type { CartItem } from "@/stores/cart";
 const Context = createContext<{
   items: CartItem[];
   setItems: Dispatch<SetStateAction<CartItem[]>>;
-  user: User | null;
 } | null>(null);
 export default function ShopProvider({
   children,
@@ -58,7 +57,6 @@ export default function ShopProvider({
       value={{
         items,
         setItems,
-        user,
       }}
     >
       {children}
