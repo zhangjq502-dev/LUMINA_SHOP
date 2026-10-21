@@ -1,3 +1,4 @@
+import { AlipayGateway, ALIPAY_PREFIX } from "./alipay.gateway";
 import {
   Injectable,
   ServiceUnavailableException,
@@ -11,7 +12,10 @@ export class PaymentGateway {
   )
     ? new Stripe(process.env.STRIPE_SECRET_KEY)
     : null;
+  constructor(private readonly alipay: AlipayGateway = new AlipayGateway()) {}
   mode() {
+    if (process.env.PAYMENT_MODE === "alipay")
+      return this.alipay.ready() ? "alipay" : "disabled";
     return this.client && process.env.STRIPE_WEBHOOK_SECRET
       ? "stripe"
       : process.env.NODE_ENV !== "production" &&
@@ -24,7 +28,12 @@ export class PaymentGateway {
       throw new ServiceUnavailableException("Stripe 测试环境尚未配置");
     return this.client;
   }
-  async close(sessionId: string) {
+  async close(sessionId: string, expiresAt?: Date) {
+    if (sessionId.startsWith(ALIPAY_PREFIX))
+      return this.alipay.close(
+        sessionId.slice(ALIPAY_PREFIX.length),
+        expiresAt,
+      );
     const stripe = this.stripe();
     let session = await stripe.checkout.sessions.retrieve(sessionId);
     if (session.payment_status === "paid") return session;

@@ -125,3 +125,9 @@ npm run test:e2e:report
 5. 验证成功支付、取消返回、重复回调与刷新后的状态；没有外部密钥时继续使用 PAYMENT_MODE=demo。只有 sk_test_ 和回调密钥都已填写才启用 Stripe，否则开发模式回退 demo，生产模式禁用付款。
 
 官方说明：https://docs.stripe.com/keys 、https://docs.stripe.com/stripe-cli 、https://docs.stripe.com/checkout/fulfillment
+
+## 支付宝官方沙箱
+
+已增加独立支付宝适配器，固定官方沙箱网关，支持服务端金额签名、付款跳转、主动查单、异步通知验签、重复通知幂等和取消时的远端关闭检查。保留 Stripe 测试与本地模拟支付。
+
+首次运行 `npm run alipay:keys` 生成应用密钥，私钥写入本地 .env，应用公钥写入被 Git 忽略的 backend/.payment-keys。运行 `npm run payment:check` 查看还缺哪些配置。详细的本人登录、上传应用公钥及沙箱验收步骤见 [docs/alipay-sandbox.md](docs/alipay-sandbox.md)。未配置时继续使用模拟付款；生成密钥和自动化通过不代表官方沙箱交易已经实测。

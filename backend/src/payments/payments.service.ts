@@ -36,6 +36,8 @@ export class PaymentsService {
       throw new ServiceUnavailableException(
         "请配置 Stripe 测试密钥和回调签名密钥",
       );
+    if (order.paymentSessionId?.startsWith("alipay:"))
+      throw new ConflictException("订单已绑定支付宝支付");
     const stripe = this.gateway.stripe();
     let session;
     if (order.paymentSessionId)

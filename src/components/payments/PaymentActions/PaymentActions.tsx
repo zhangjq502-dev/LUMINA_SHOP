@@ -37,7 +37,12 @@ export default function PaymentActions({
     }
   }
   useEffect(() => {
-    if (mode !== "stripe" || returned !== "success" || syncing.current) return;
+    if (
+      !["stripe", "alipay"].includes(mode) ||
+      returned !== "success" ||
+      syncing.current
+    )
+      return;
     syncing.current = true;
     navigate(location.pathname, { replace: true });
     setPending(true);
@@ -67,20 +72,32 @@ export default function PaymentActions({
           <p className={s.muted}>
             {mode === "demo"
               ? "本地模拟支付，仅演示订单流程，不会扣款。"
-              : "Stripe 测试支付，不会产生真实扣款。"}
+              : mode === "alipay"
+                ? "支付宝官方沙箱，仅使用测试账号和虚拟资金。"
+                : "Stripe 测试支付，不会产生真实扣款。"}
           </p>
           <button
             className={s.button}
             disabled={pending}
-            onClick={() => void action(mode === "demo" ? "demo" : "checkout")}
+            onClick={() =>
+              void action(
+                mode === "demo"
+                  ? "demo"
+                  : mode === "alipay"
+                    ? "alipay"
+                    : "checkout",
+              )
+            }
           >
             {pending
               ? "正在处理…"
               : mode === "demo"
                 ? "模拟付款"
-                : "前往 Stripe 测试支付"}
+                : mode === "alipay"
+                  ? "前往支付宝沙箱付款"
+                  : "前往 Stripe 测试支付"}
           </button>
-          {mode === "stripe" && (
+          {["stripe", "alipay"].includes(mode) && (
             <button
               className={s.textButton}
               disabled={pending}

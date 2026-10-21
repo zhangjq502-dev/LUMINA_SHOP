@@ -54,3 +54,5 @@ next-env.d.ts
 
 /playwright-report/
 /test-results/
+
+/backend/.payment-keys/

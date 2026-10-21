@@ -27,5 +27,16 @@ export default function OrderDetailPage() {
   if (error instanceof ApiError && error.status === 404) return <NotFound />;
   if (error) return <ErrorState message={error.message} retry={refresh} />;
   if (loading || !data) return <LoadingState />;
-  return <OrderDetail order={data.order} paymentMode={data.mode} />;
+  return (
+    <OrderDetail
+      order={data.order}
+      paymentMode={
+        data.order.paymentSessionId?.startsWith("alipay:")
+          ? "alipay"
+          : data.order.paymentSessionId
+            ? "stripe"
+            : data.mode
+      }
+    />
+  );
 }

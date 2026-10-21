@@ -7,8 +7,12 @@ import {
   Headers,
   NotFoundException,
   RawBodyRequest,
+  Body,
+  Header,
+  HttpCode,
 } from "@nestjs/common";
 import type { Request } from "express";
+import { AlipayService } from "./alipay.service";
 import { AuthService } from "../auth/auth.service";
 import { PaymentsService } from "./payments.service";
 @Controller("payments")
@@ -16,6 +20,7 @@ export class PaymentsController {
   constructor(
     private readonly payments: PaymentsService,
     private readonly auth: AuthService,
+    private readonly alipay: AlipayService,
   ) {}
   @Get("config") config() {
     return this.payments.config();
@@ -28,6 +33,18 @@ export class PaymentsController {
       req.rawBody ?? Buffer.alloc(0),
       signature ?? "",
     );
+  }
+  @Post("alipay/notify")
+  @HttpCode(200)
+  @Header("Content-Type", "text/plain; charset=utf-8")
+  notify(@Body() body: unknown) {
+    return this.alipay.notify(body);
+  }
+  @Post(":id/alipay")
+  async alipayCheckout(@Param("id") id: string, @Req() req: Request) {
+    const owner = await this.auth.getOwner(req);
+    if (!owner) throw new NotFoundException("订单不存在");
+    return this.alipay.checkout(id, owner);
   }
   @Post(":id/checkout") async checkout(
     @Param("id") id: string,
@@ -45,6 +62,9 @@ export class PaymentsController {
   @Post(":id/sync") async sync(@Param("id") id: string, @Req() req: Request) {
     const owner = await this.auth.getOwner(req);
     if (!owner) throw new NotFoundException("订单不存在");
-    return this.payments.sync(id, owner);
+    const order = await this.payments.owned(id, owner);
+    return order.paymentSessionId?.startsWith("alipay:")
+      ? this.alipay.sync(id, owner)
+      : this.payments.sync(id, owner);
   }
 }

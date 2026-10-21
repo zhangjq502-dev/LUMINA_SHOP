@@ -191,7 +191,10 @@ export class OrdersService {
     });
     if (!pending) throw new OrderError("订单不存在", 404);
     if (pending.status === "PENDING_PAYMENT" && pending.paymentSessionId) {
-      const session = await this.gateway.close(pending.paymentSessionId);
+      const session = await this.gateway.close(
+        pending.paymentSessionId,
+        pending.expiresAt,
+      );
       if (session.payment_status === "paid") {
         await this.recordPayment(
           id,
@@ -212,7 +215,12 @@ export class OrdersService {
       if (order.status === "CANCELLED" || order.status === "EXPIRED")
         return serializeOrder(order);
       const changed = await tx.order.updateMany({
-        where: { id, ...ownerWhere(owner), status: "PENDING_PAYMENT" },
+        where: {
+          id,
+          ...ownerWhere(owner),
+          status: "PENDING_PAYMENT",
+          paymentSessionId: pending.paymentSessionId,
+        },
         data: { status: expired ? "EXPIRED" : "CANCELLED" },
       });
       if (changed.count !== 1) throw new OrderError("当前订单状态不支持取消");

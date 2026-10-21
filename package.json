@@ -22,7 +22,9 @@
     "admin:grant": "npm run build:api && npm run admin:grant --workspace backend --",
     "preview": "vite preview",
     "test:e2e": "playwright test",
-    "test:e2e:report": "playwright show-report"
+    "test:e2e:report": "playwright show-report",
+    "alipay:keys": "node scripts/setup-alipay.mjs",
+    "payment:check": "node scripts/setup-alipay.mjs --check"
   },
   "dependencies": {
     "react": "19.3.0",

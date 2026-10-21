@@ -17,7 +17,12 @@ async function bootstrap() {
   app.use((req: Request, res: Response, next: NextFunction) => {
     res.setHeader("Cache-Control", "private, no-store");
     const origin = req.headers.origin;
-    if (req.path === "/api/payments/webhook") return next();
+    if (
+      ["/api/payments/webhook", "/api/payments/alipay/notify"].includes(
+        req.path,
+      )
+    )
+      return next();
     if (
       ["POST", "PATCH", "PUT", "DELETE"].includes(req.method) &&
       ((origin && origin !== frontendOrigin) ||
